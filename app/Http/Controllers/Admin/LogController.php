@@ -9,7 +9,8 @@ use DB;
 class LogController extends Controller
 {
     public function index(Request $request){
-//        DB::table('logs')
+        $result =  DB::table('logs')->get();
+        return json_encode($result);
     }
 
 }

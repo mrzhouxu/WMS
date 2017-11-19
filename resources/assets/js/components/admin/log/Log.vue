@@ -14,27 +14,27 @@
                 style="width: 100%">
             <el-table-column
                     type="index"
-                    width="50">
+                    width="150">
             </el-table-column>
+            <!--<el-table-column-->
+                    <!--label="日期"-->
+                    <!--width="180">-->
+                <!--<template  slot-scope="scope">{{ scope.row.create_time | date }}</template>-->
+            <!--</el-table-column>-->
             <el-table-column
-                    label="日期"
-                    width="180">
-                <template  slot-scope="scope">{{ scope.row.date }}</template>
-            </el-table-column>
-            <el-table-column
-                    prop="name"
+                    prop="content"
                     label="内容">
             </el-table-column>
         </el-table>
-        <el-pagination
-                @size-change="handleSizeChange"
-                @current-change="handleCurrentChange"
-                :current-page="currentPage4"
-                :page-sizes="[100, 200, 300, 400]"
-                :page-size="100"
-                layout="total, sizes, prev, pager, next, jumper"
-                :total="400">
-        </el-pagination>
+        <!--<el-pagination-->
+                <!--@size-change="handleSizeChange"-->
+                <!--@current-change="handleCurrentChange"-->
+                <!--:current-page="currentPage4"-->
+                <!--:page-sizes="[100, 200, 300, 400]"-->
+                <!--:page-size="100"-->
+                <!--layout="total, sizes, prev, pager, next, jumper"-->
+                <!--:total="400">-->
+        <!--</el-pagination>-->
     </div>
 </template>
 
@@ -45,23 +45,7 @@
         },
         data(){
             return {
-                tableData: [{
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄'
-                }, {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄'
-                }, {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄'
-                }, {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄'
-                }],
+                tableData: [],
                 currentPage4: 1
             }
         },
@@ -79,7 +63,8 @@
                 };
                 axios.post('/admin/log/get_list',param)
                     .then(res=>{
-
+//                        console.log(res.data)
+                        this.tableData = res.data
                     })
                     .catch(err=>{
 
