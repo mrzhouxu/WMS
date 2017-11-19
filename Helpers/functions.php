@@ -32,7 +32,9 @@ function getFilename($ext)
     $filename = time() . '-' . uniqid() . '.' . $ext;
     return $filename;
 }
-
+/*
+ * {"id":1,"name":"","sex":0,"address":"","phone":"","img":"","card":"","status":0,"user":"admin","password":"c3284d0f94606de1fd2af172aba15bf3"}
+ * */
 function get_session_user()
 {
     /*$std               = new \stdClass();
@@ -56,7 +58,7 @@ function get_session_user()
 function get_session_user_id()
 {
     $user = session("user");
-    return $user ? $user->user_login : 0;
+    return $user ? $user->id : 0;
 }
 
 function get_wx_user_openid()
