@@ -40,6 +40,11 @@ export default new VueRouter({
             path: '/log',
             component: resolve =>void(require(['../components/admin/log/Log.vue'], resolve))
         },
+        {
+            name: '店员列表',
+            path: '/employee/list',
+            component: resolve =>void(require(['../components/admin/employee/List.vue'], resolve))
+        },
     ]
 })
 
