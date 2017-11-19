@@ -30,6 +30,11 @@ export default new VueRouter({
             path: '/wx/menu',
             component: resolve =>void(require(['../components/admin/wx/menu.vue'], resolve))
         },
+        {
+            name: '修改密码',
+            path: '/super/password',
+            component: resolve =>void(require(['../components/admin/super/password.vue'], resolve))
+        },
     ]
 })
 
