@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div  v-loading="loading" element-loading-text="拼命加载中~~~">
         <div class="gm-breadcrumb">
             <span class="el-breadcrumb__item__inner"><i class="ion-ios-home gm-home"></i>当前位置：</span>
             <el-breadcrumb separator="/">
@@ -46,7 +46,8 @@
         data(){
             return {
                 tableData: [],
-                currentPage4: 1
+                currentPage4: 1,
+                loading:true
             }
         },
         methods : {
@@ -65,9 +66,10 @@
                     .then(res=>{
 //                        console.log(res.data)
                         this.tableData = res.data
+                        this.loading = false
                     })
                     .catch(err=>{
-
+                        this.loading = false
                     })
             }
 
