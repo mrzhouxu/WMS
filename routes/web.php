@@ -24,7 +24,7 @@ Route::group(['prefix' => 'wx'], function () {
 });
 
 
-Route::group(['middleware' => ['login.check']], function () {
+//Route::group(['middleware' => ['login.check']], function () {
     Route::get('/', 'IndexController@index');
     include('admin.php');
-});
+//});

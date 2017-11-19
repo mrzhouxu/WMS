@@ -35,6 +35,11 @@ export default new VueRouter({
             path: '/super/password',
             component: resolve =>void(require(['../components/admin/super/password.vue'], resolve))
         },
+        {
+            name: '日志列表',
+            path: '/log',
+            component: resolve =>void(require(['../components/admin/log/Log.vue'], resolve))
+        },
     ]
 })
 

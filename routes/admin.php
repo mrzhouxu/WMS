@@ -34,6 +34,8 @@ Route::group(['prefix' => 'admin'], function () {
         Route::get('/user/menu/get', 'Admin\WeixinController@get_wx_user_mennu');
     });
 
+    Route::post('/log/get_list','Admin\LogController@index');
+
 });
 /*Route::group(['prefix' => 'weixin'], function () {
     Route::post("/config/set", 'Admin\WeixinController@set_config');
