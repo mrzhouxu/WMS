@@ -35,6 +35,7 @@ Route::group(['prefix' => 'admin'], function () {
     });
 
     Route::post('/log/get_list','Admin\LogController@index');
+    Route::post('/employee/list','Admin\EmployeeController@get_data');
 
 });
 /*Route::group(['prefix' => 'weixin'], function () {

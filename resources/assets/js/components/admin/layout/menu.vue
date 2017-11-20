@@ -6,6 +6,12 @@
                 style="padding-left: 20px;text-align: -webkit-center;height: 40px;line-height: 40px;">
                 <i class="ion-navicon-round rorate" style="font-size: 19px;"></i>
             </li>
+            <span>
+                <el-menu-item index="/">
+                    <i class="ion-ios-speedometer" style="font-size:19px;"></i>
+                    <span>首页</span>
+                </el-menu-item>
+            </span>
             <el-submenu v-for="(v,index) in menu" :key="index" :index.sync="v.path" :router="true">
                 <template slot="title"><i :class="v.icon" class="menu-icon"></i>{{v.name}}</template>
                 <el-menu-item v-for="(vv,vindex) in v.children" :key="vindex" :index.sync="vv.path">
@@ -14,12 +20,20 @@
             </el-submenu>
         </el-menu>
 
+
+
+
         <el-menu v-if="change == 2" :default-active="current" :default-openeds="opened"
                  :router="true">
             <li class="el-menu-item menu_change_h" @click="change_menu(1)"
                 style="padding-left: 18px;height:40px;line-height: 40px;">
                 <i class="ion-navicon-round menu-icon"></i>
             </li>
+            <span>
+                <el-menu-item index="/" class="el-submenu__title">
+                    <i class="ion-ios-speedometer" style="font-size:19px;position:relative;left:-4px;"></i>
+                </el-menu-item>
+            </span>
             <el-submenu v-for="(v,index) in menu" :key="index" :data-menu="v.name" :index.sync="v.path"
                         class="menu_show" :router="true">
                 <el-tooltip v-for="(vv,vindex) in v.children" :key="vindex" class="item" effect="dark" :content="vv.name" placement="right">

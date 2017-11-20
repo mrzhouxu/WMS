@@ -7,6 +7,21 @@
                 <el-breadcrumb-item>日志列表</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
+
+        <div style="padding-bottom: 10px;">
+            <span style="font-size: 14px;margin-right: 6px;">选择日期 : </span>
+            <el-date-picker
+                    v-model="time"
+                    type="daterange"
+                    align="right"
+                    placeholder="请选择要查询的日期"
+                    @change="change"
+                    :picker-options="pickerOptions2">
+            </el-date-picker>
+            <el-button type="primary" icon="search" style="background: rgb(69, 91, 140);border-color: rgb(69, 91, 140);" @click="submit">查询</el-button>
+        </div>
+
+
         <el-table
                 :data="tableData"
                 border
@@ -45,9 +60,37 @@
         },
         data(){
             return {
+                pickerOptions2: {
+                    shortcuts: [{
+                        text: '最近一周',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近一个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }, {
+                        text: '最近三个月',
+                        onClick(picker) {
+                            const end = new Date();
+                            const start = new Date();
+                            start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+                            picker.$emit('pick', [start, end]);
+                        }
+                    }]
+                },
                 tableData: [],
                 currentPage4: 1,
-                loading:true
+                loading:true,
+                time:'',
             }
         },
         methods : {
@@ -59,8 +102,8 @@
             },
             getData(){
                 let param = {
-                    id:1,
-                    name:2
+                    start_time:Date.parse(this.time[0])/1000,
+                    end_time:Date.parse(this.time[1])/1000
                 };
                 axios.post('/admin/log/get_list',param)
                     .then(res=>{
@@ -71,6 +114,14 @@
                     .catch(err=>{
                         this.loading = false
                     })
+            },
+            change(val){
+//                console.log(val)
+//                console.log(this.time)
+            },
+            submit(){
+                this.loading = true
+                this.getData()
             }
 
         },
