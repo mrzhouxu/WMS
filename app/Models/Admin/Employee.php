@@ -14,10 +14,13 @@ class Employee extends Model
 
     /*得到员工信息
      * */
-    static public function get_data(){
+    static public function get_data($key,$val){
         $result = DB::table('employee')
+            ->when($key && $val , function($query)use($key,$val){
+                $query->where($key,$val);
+            })
             ->where('status',0)
-            ->select('name','sex','address','phone','img','card','user')
+            ->select('id','name','sex','address','phone','img','card','user')
             ->get();
         return $result;
     }

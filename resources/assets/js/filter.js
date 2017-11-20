@@ -40,6 +40,14 @@ const filters = {
     //去掉html标签
     delHtmlTag: function(str){
         return str.replace(/<[^>]+>/g,"");//去掉所有的html标记
+    },
+    sex(val){
+        if(val == 0)
+            return '未知'
+        else if(val == 1)
+            return '男'
+        else if(val == 2)
+            return '女'
     }
 
 }
