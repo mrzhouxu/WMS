@@ -10,6 +10,9 @@
 
         <div style="padding-bottom: 10px;">
             <!--<span style="font-size: 14px;margin-right: 6px;">选择日期 : </span>-->
+            <router-link to="/employee/edit">
+                <el-button type="primary"><i class="ion-plus"></i> 新增店员</el-button>
+            </router-link>
             <el-input placeholder="请输入内容" v-model="val" style="width: inherit;" >
                 <el-select v-model="key" slot="prepend" placeholder="请选择" style="width: 120px;">
                     <el-option
@@ -20,7 +23,7 @@
                     </el-option>
                 </el-select>
             </el-input>
-            <el-button type="primary" icon="search" style="background: rgb(69, 91, 140);border-color: rgb(69, 91, 140);" @click="submit">查询</el-button>
+            <el-button type="primary" icon="search" @click="submit">查询</el-button>
         </div>
 
 
@@ -46,9 +49,9 @@
                             placement="right"
                             width="400"
                             trigger="hover">
-                        <img :src="scope.row.img" alt="" width="100%" >
+                        <img :src="'/show_img/'+scope.row.img" alt="" width="100%" >
                     </el-popover>
-                    <img :src="scope.row.img" alt="" width="50" height="50" v-popover:popover1 >
+                    <img :src="'/show_img/'+scope.row.img" alt="" width="50" height="50" v-popover:popover1 >
                 </template>
             </el-table-column>
             <el-table-column
@@ -105,7 +108,7 @@
         },
         data(){
             return {
-                loading:false,
+                loading:true,
                 tableData: [],
                 key:'0',
                 val:'',
@@ -142,23 +145,71 @@
                 }
                 axios.post('/admin/employee/list',param)
                     .then((res)=>{
+                    this.loading = false
                         this.tableData = res.data.result
                     })
                     .catch((err)=>{
-
+                        this.loading = false
                     })
             },
             submit(){
+                this.loading = true
                 this.getData()
             },
             edit(id){
-                console.log(id)
+                this.$router.push({path:"/employee/edit/"+id });
             },
             del(id){
-
+                this.$confirm('此操作将永久删除该店员, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loading = true
+                    axios.post('/admin/employee/del',{id:id})
+                        .then(res=>{
+                            this.loading = false
+                            if(res.data.status == 0){
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                                this.loading = true
+                                this.getData()
+                            }
+                        })
+                        .catch()
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             },
             reset(id){
-
+                this.$confirm('此操作将重置该用户密码为666666, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loading = true
+                    axios.post('/admin/employee/reset',{id:id})
+                        .then(res=>{
+                            this.loading = false
+                            if(res.data.status == 0){
+                                this.$message({
+                                    type: 'success',
+                                    message: '密码重置成功!'
+                                });
+                            }
+                        })
+                        .catch()
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消操作'
+                    });
+                });
             }
         },
         mounted(){

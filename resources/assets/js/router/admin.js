@@ -45,6 +45,11 @@ export default new VueRouter({
             path: '/employee/list',
             component: resolve =>void(require(['../components/admin/employee/List.vue'], resolve))
         },
+        {
+            name: '店员编辑',
+            path: '/employee/edit/:id?',
+            component: resolve =>void(require(['../components/admin/employee/Edit.vue'], resolve))
+        },
     ]
 })
 

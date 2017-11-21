@@ -28,3 +28,5 @@ Route::group(['prefix' => 'wx'], function () {
     Route::get('/', 'IndexController@index');
     include('admin.php');
 //});
+
+Route::get('/show_img/{name}','IndexController@show_img');

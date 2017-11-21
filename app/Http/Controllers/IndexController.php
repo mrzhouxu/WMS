@@ -24,4 +24,11 @@ class IndexController extends Controller
     public function test () {
     	echo "测试";
     }
+
+    public function show_img(Request $request) {
+        $path = storage_path() . '/app/public/img/' . $request->name;
+        if(file_exists($path)) {
+            return response()->file($path);
+        }
+    }
 }

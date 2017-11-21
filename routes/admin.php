@@ -36,6 +36,12 @@ Route::group(['prefix' => 'admin'], function () {
 
     Route::post('/log/get_list','Admin\LogController@index');
     Route::post('/employee/list','Admin\EmployeeController@get_data');
+    Route::get('/employee/get_info','Admin\EmployeeController@get_info');
+    Route::post('/employee/img','Admin\EmployeeController@upload_img');
+    Route::post('/employee/edit','Admin\EmployeeController@edit');
+    Route::post('/employee/del','Admin\EmployeeController@del');
+    Route::post('/employee/reset','Admin\EmployeeController@reset');
+    Route::post('/employee/add','Admin\EmployeeController@add');
 
 });
 /*Route::group(['prefix' => 'weixin'], function () {

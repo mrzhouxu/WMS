@@ -36,4 +36,10 @@
 <script src="{{ mix('js/vendor.js') }}?t={{time()}}"></script>
 <script src="{{ mix('js/admin.js') }}?t={{time()}}"></script>
 </body>
+<style>
+    .el-button--primary{
+        background: rgb(118, 139, 187);
+        border-color: rgb(118, 139, 187);
+    }
+</style>
 </html>

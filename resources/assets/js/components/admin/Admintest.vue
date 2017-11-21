@@ -18,8 +18,8 @@
         },
         data(){
             return {
-                loading:false;
-        }
+                loading:false
+            }
         },
         methods : {
 
