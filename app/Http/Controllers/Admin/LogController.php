@@ -16,6 +16,7 @@ class LogController extends Controller
             ->when($start && $end , function ($query) use ($start , $end) {
                 $query->whereBetween('create_time',[$start,$end]);
             })
+            ->orderBy('create_time','desc')
             ->get();
         return json_encode($result);
     }
