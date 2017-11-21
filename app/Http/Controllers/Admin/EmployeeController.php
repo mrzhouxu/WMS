@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Admin\Employee;
 use App\Models\Admin\Index;
+use App\Models\Admin\Super;
 use Illuminate\Http\Request;
 
 class EmployeeController extends Controller
@@ -90,19 +91,25 @@ class EmployeeController extends Controller
             'img'=>$request->img,
             'card'=>$request->card
         ];
+        $content = session('user')->name." 在 ".date('Y年m月d日 H点i分s秒',time()) ." 对".Employee::get_info($id)->name."的个人信息进行编辑";
         $result = Employee::edit($id,$data);
+        Super::log(session('user')->id,$content);
         return json_encode(['status'=>0,'msg'=>'success','result'=>$result]);
     }
 
     public function del(Request $request){
         $id = $request->id;
+        $content = session('user')->name." 在 ".date('Y年m月d日 H点i分s秒',time()) ." 对".Employee::get_info($id)->name."的信息进行删除";
         $result = Employee::del($id);
+        Super::log(session('user')->id,$content);
         return json_encode(['status'=>0,'msg'=>'success','result'=>$result]);
     }
 
     public function reset(Request $request){
         $id = $request->id;
+        $content = session('user')->name." 在 ".date('Y年m月d日 H点i分s秒',time()) ." 对".Employee::get_info($id)->name."的密码进行重置";
         $result = Employee::reset($id);
+        Super::log(session('user')->id,$content);
         return json_encode(['status'=>0,'msg'=>'success','result'=>$result]);
     }
 
@@ -119,8 +126,10 @@ class EmployeeController extends Controller
             'user'=>$request->user,
             'password'=>md5(md5('666666'))
         ];
+        $content = session('user')->name." 在 ".date('Y年m月d日 H点i分s秒',time()) ." 添加店员 ".$request->name;
         $result = Employee::add($data);
         if($result){
+            Super::log(session('user')->id,$content);
             return json_encode(['status'=>0,'msg'=>'添加成功!','result'=>$result]);
         }else{
             return json_encode(['status'=>1,'msg'=>'添加失败!','result'=>$result]);
