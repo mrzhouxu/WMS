@@ -89,4 +89,10 @@ class DealerController extends Controller
         return json_encode(['status'=>0,'msg'=>'success']);
     }
 
+    public function del(Request $request){
+        $id = $request->id;
+        $result = Dealer::del($id);
+        return json_encode(['status'=>0,'msg'=>'success','result'=>$result]);
+    }
+
 }

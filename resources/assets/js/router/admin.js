@@ -60,6 +60,16 @@ export default new VueRouter({
             path: '/dealer/edit/:id?',
             component: resolve =>void(require(['../components/admin/dealer/Edit.vue'], resolve))
         },
+        {
+            name: '我要进货',
+            path: '/goods/purchase',
+            component: resolve =>void(require(['../components/admin/goods/Purchase.vue'], resolve))
+        },
+        {
+            name: '分类管理',
+            path: '/goods/type',
+            component: resolve =>void(require(['../components/admin/goods/Type.vue'], resolve))
+        },
     ]
 })
 

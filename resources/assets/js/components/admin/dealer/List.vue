@@ -77,7 +77,7 @@
                             <img :src="'/show_img/'+item[0]" alt="" style="width: 100%;height:100%;position: absolute;top: 0;left: 0;">
                             <div style="width: 100%;height:100%;position: absolute;top: 0;left: 0;background: url(data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAKAAAABQCAMAAACpg44GAAAAbFBMVEUiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiIiK2HsfSAAAAJHRSTlPMxr63q6OahzclHRULBgHCsZOOf3p1cGtmYVxXUk1IQz4wLBAszz8hAAAAhklEQVRo3u3OxY0DAAADsBxDmZn337FTVPIjnsAZ4/zgCOcHhzg/+MBlgPOD/zg/+Ifzg3dcbrj84vzgFZcLLmdcTrgccTngssdlh8sWlw0ua1xWuCxxWeDyg/ODc1xmuHzj/OAXzg9+4vzgFJcPnB98x/nBCS5vOD9YVVVVVVVVVVVVr/IEUdzLcLhtP2AAAAAASUVORK5CYII=) repeat-x bottom">
                                 <div style="position: absolute;bottom: 6px;color: #fff;width: 100%;">
-                                    <div style="font-size: 16px;line-height: 22px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;margin: 0 10px;">{{ item[1] }}</div>
+                                    <div style="font-size: 16px;line-height: 22px;white-space: nowrap;overflow: hidden;text-overflow: ellipsis;margin: 0 10px;text-align:center;">{{ item[1] }}</div>
                                 </div>
                             </div>
                         </div>
@@ -119,16 +119,18 @@
         },
         methods : {
             getData(){
+                this.loading = true
                 let param = {
                     key:this.key,
                     val:this.val
                 }
                 axios.post('/admin/dealer/get_data',param)
                     .then(res=>{
+                        this.loading = false
                         this.tableData = res.data.result
                     })
                     .catch(err=>{
-
+                        this.loading = false
                     })
             },
             submit(){
@@ -138,7 +140,31 @@
                 this.$router.push({path:"/dealer/edit/"+id });
             },
             del(id){
-
+                this.$confirm('此操作将永久删除该供销商, 是否继续?', '提示', {
+                    confirmButtonText: '确定',
+                    cancelButtonText: '取消',
+                    type: 'warning'
+                }).then(() => {
+                    this.loading = true
+                    axios.post('/admin/dealer/del',{id:id})
+                        .then(res=>{
+                            this.loading = false
+                            if(res.data.status == 0){
+                                this.$message({
+                                    type: 'success',
+                                    message: '删除成功!'
+                                });
+                                this.loading = true
+                                this.getData()
+                            }
+                        })
+                        .catch()
+                }).catch(() => {
+                    this.$message({
+                        type: 'info',
+                        message: '已取消删除'
+                    });
+                });
             }
         },
         mounted(){

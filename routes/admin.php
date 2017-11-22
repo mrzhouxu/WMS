@@ -47,6 +47,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/get_data','Admin\DealerController@get_data');
         Route::post('/add','Admin\DealerController@add');
         Route::post('/edit','Admin\DealerController@edit');
+        Route::post('/del','Admin\DealerController@del');
         Route::post('/get_info','Admin\DealerController@get_info');
     });
 

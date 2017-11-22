@@ -86,4 +86,12 @@ class Dealer extends Model
         return $result;
     }
 
+    /*删除供销商*/
+    static public function del($id){
+        $result = DB::table('dealer')
+            ->where('id',$id)
+            ->update(['status'=>1]);
+        return $result;
+    }
+
 }

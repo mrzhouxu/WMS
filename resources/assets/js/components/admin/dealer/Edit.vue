@@ -30,7 +30,7 @@
                 </el-form-item>
 
                 <el-form-item label="所有产品">
-                    <el-button @click="dialogFormVisible = true"><i class="ion-plus"></i> 添加产品</el-button>
+                    <el-button @click="dialogFormVisible = true;product={name:'',in_price:'',out_price:'',unit:'',img:'',status:'0'}"><i class="ion-plus"></i> 添加产品</el-button>
                 </el-form-item>
 
             </el-form>
@@ -197,6 +197,7 @@
                 return isJPG && isLt2M;
             },
             submitForm(){
+                this.loading = true
                 let param = {
                     id:this.id,
                     name:this.info.name,
@@ -207,22 +208,20 @@
                 if(this.id){
                     axios.post('/admin/dealer/edit',param)
                         .then(res=>{
-
+                            this.loading = false
                         })
                         .catch(err=>{
-
+                            this.loading = false
                         })
                 }else{
                     axios.post('/admin/dealer/add',param)
                         .then(res=>{
-
+                            this.loading = false
                         })
                         .catch(err=>{
-
+                            this.loading = false
                         })
                 }
-
-
             },
             add_product(){
                 this.dialogFormVisible = false
@@ -249,13 +248,15 @@
                 console.log(index)
             },
             getInfo(){
+                this.loading = true
                 axios.post('/admin/dealer/get_info',{ id:this.id })
                     .then(res=>{
+                        this.loading = false
                         this.info = res.data.info
                         this.product_all = res.data.products
                     })
                     .catch(err=>{
-
+                        this.loading = false
                     })
             }
         },
