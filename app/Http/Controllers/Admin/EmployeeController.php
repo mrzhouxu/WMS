@@ -64,7 +64,7 @@ class EmployeeController extends Controller
             ];
         }
         $extension = $file->getClientOriginalExtension();
-        $storage_path = storage_path('app/public/img');//todo  这个路径不知道   在缓存里面
+        $storage_path = storage_path('app/public/img');
         if (!file_exists($storage_path)) {
             mkdir($storage_path, 0777, true);
         }

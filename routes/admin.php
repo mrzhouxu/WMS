@@ -43,6 +43,13 @@ Route::group(['prefix' => 'admin'], function () {
     Route::post('/employee/reset','Admin\EmployeeController@reset');
     Route::post('/employee/add','Admin\EmployeeController@add');
 
+    Route::group(['prefix' => 'dealer'], function () {
+        Route::post('/get_data','Admin\DealerController@get_data');
+        Route::post('/add','Admin\DealerController@add');
+        Route::post('/edit','Admin\DealerController@edit');
+        Route::post('/get_info','Admin\DealerController@get_info');
+    });
+
 });
 /*Route::group(['prefix' => 'weixin'], function () {
     Route::post("/config/set", 'Admin\WeixinController@set_config');
