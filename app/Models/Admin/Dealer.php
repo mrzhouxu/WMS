@@ -53,10 +53,11 @@ class Dealer extends Model
     }
 
     /*添加经销商的产品*/
-    static public function add_dealer_product($dealer_id,$name,$in_price,$out_price,$unit,$img){
+    static public function add_dealer_product($dealer_id,$name,$type,$in_price,$out_price,$unit,$img){
         $data = [
             'dealer_id'=>$dealer_id,
             'name'=>$name,
+            'type'=>$type,
             'in_price'=>$in_price,
             'out_price'=>$out_price,
             'unit'=>$unit,

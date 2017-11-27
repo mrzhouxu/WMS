@@ -37,7 +37,7 @@ class DealerController extends Controller
         if($id){
             if($product_all){
                 foreach ($product_all as $item){
-                    Dealer::add_dealer_product($id,$item['name'],$item['in_price'],$item['out_price'],$item['unit'],$item['img']);
+                    Dealer::add_dealer_product($id,$item['name'],$item['type'],$item['in_price'],$item['out_price'],$item['unit'],$item['img']);
                 }
             }
             return json_encode(['status'=>0,'msg'=>'success','result'=>$product_all]);
@@ -73,6 +73,7 @@ class DealerController extends Controller
             foreach ($product_all as $item){
                 $product_info = [
                     'name'=>$item['name'],
+                    'type'=>$item['type'],
                     'in_price'=>$item['in_price'],
                     'out_price'=>$item['out_price'],
                     'unit'=>$item['unit'],
@@ -82,7 +83,7 @@ class DealerController extends Controller
                 if(isset($item['id'])){
                     Dealer::update_dealer_product($item['id'],$product_info);
                 }else{
-                    Dealer::add_dealer_product($id,$item['name'],$item['in_price'],$item['out_price'],$item['unit'],$item['img']);
+                    Dealer::add_dealer_product($id,$item['name'],$item['type'],$item['in_price'],$item['out_price'],$item['unit'],$item['img']);
                 }
             }
         }

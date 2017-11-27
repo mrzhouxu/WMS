@@ -53,6 +53,16 @@
                     <el-form-item label="商品名称">
                         <el-input v-model="product.name"></el-input>
                     </el-form-item>
+                    <el-form-item label="商品分类">
+                        <el-select v-model="product.type" placeholder="请选择">
+                            <el-option
+                                    v-for="item in productType"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
+                    </el-form-item>
                     <el-form-item label="商品进价">
                         <el-input v-model="product.in_price"><template slot="append">元</template></el-input>
                     </el-form-item>
@@ -86,6 +96,16 @@
                     </el-form-item>
                     <el-form-item label="商品名称">
                         <el-input v-model="edit_product.name"></el-input>
+                    </el-form-item>
+                    <el-form-item label="商品分类">
+                        <el-select v-model="edit_product.type" placeholder="请选择">
+                            <el-option
+                                    v-for="item in productType"
+                                    :key="item.value"
+                                    :label="item.label"
+                                    :value="item.value">
+                            </el-option>
+                        </el-select>
                     </el-form-item>
                     <el-form-item label="商品进价">
                         <el-input v-model="edit_product.in_price"><template slot="append">元</template></el-input>
@@ -149,8 +169,10 @@
                 },
                 dialogFormVisible: false,
                 dialogFormVisible_edit:false,
+                productType:[],
                 product: {
                     name:'',
+                    type:'',
                     in_price:'',
                     out_price:'',
                     unit:'',
@@ -160,6 +182,7 @@
                 edit_product: {
                     name:'',
                     in_price:'',
+                    type:'',
                     out_price:'',
                     unit:'',
                     img:'',
@@ -227,6 +250,7 @@
                 this.dialogFormVisible = false
                 this.product_all.push({
                     name:this.product.name,
+                    type:this.product.type,
                     in_price:this.product.in_price,
                     out_price:this.product.out_price,
                     unit:this.product.unit,
@@ -258,6 +282,23 @@
                     .catch(err=>{
                         this.loading = false
                     })
+            },
+            getType(){
+                axios.post('/admin/goods/type/get_data')
+                    .then(res=>{
+                        this.loading = false
+                        let temp = [];
+                        res.data.result.forEach((value,index,array)=>{
+                            var item = {}
+                            item.value = value.id
+                            item.label = value.name
+                            temp.push(item)
+                        });
+                        this.productType = temp;
+                    })
+                    .catch(err=>{
+                        this.loading = false
+                    })
             }
         },
         mounted(){
@@ -265,6 +306,7 @@
             if(this.id){
                 this.getInfo()
             }
+            this.getType()
         }
     }
 </script>

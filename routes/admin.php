@@ -51,6 +51,14 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/get_info','Admin\DealerController@get_info');
     });
 
+    Route::group(['prefix'=>'goods'],function(){
+        Route::post('/type/get_data','Admin\GoodsController@get_type_data');
+        Route::post('/type/add_type','Admin\GoodsController@add_type');
+        Route::post('/type/edit_type','Admin\GoodsController@edit_type');
+        Route::post('/type/del_type','Admin\GoodsController@del_type');
+        Route::post('/type/_id_get_data','Admin\GoodsController@_id_get_data');
+    });
+
 });
 /*Route::group(['prefix' => 'weixin'], function () {
     Route::post("/config/set", 'Admin\WeixinController@set_config');
