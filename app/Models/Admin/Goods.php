@@ -60,4 +60,22 @@ class Goods extends Model
             ]);
         return $result;
     }
+
+    /*得到所有供销商的商品
+        $key, 字段
+        $val, 值
+        $selType 类型值
+    */
+    static public function get_dealer_data($key='',$val='',$selType=''){
+        $result = DB::table('dealer_commodity')
+            ->when($key&&$val,function($query)use($key,$val){
+                $query->where($key,'like','%'.$val.'%');
+            })
+            ->when($selType,function($query)use($selType){
+                $query->where('type',$selType);
+            })
+            ->where('status',0)
+            ->get();
+        return $result;
+    }
 }

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Models\Admin\Dealer;
 use App\Models\Admin\Goods;
 use Illuminate\Http\Request;
 use DB;
@@ -52,5 +53,24 @@ class GoodsController extends Controller
             return json_encode(['status'=>0,'msg'=>'删除成功!','result'=>$result]);
         }
         return json_encode([['status'=>1,'msg'=>'删除失败!','result'=>$result]]);
+    }
+
+    public function get_dealer_data(Request $request){
+        $key = $request->key;
+        $val = $request->val;
+        $selType = $request->selType;
+        $result = Goods::get_dealer_data($key,$val,$selType);
+        $dealers = Dealer::get_data();
+        foreach ($result as $g){
+            foreach($dealers as $d){
+                if($g->dealer_id == $d->id){
+                    $g->dealer_name = $d->name;
+                    $g->num = 0;
+                    $g->phone = $d->phone;
+                    $g->address = $d->address;
+                }
+            }
+        }
+        return json_encode(['status'=>0,'msg'=>'success','result'=>$result]);
     }
 }

@@ -57,6 +57,7 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/type/edit_type','Admin\GoodsController@edit_type');
         Route::post('/type/del_type','Admin\GoodsController@del_type');
         Route::post('/type/_id_get_data','Admin\GoodsController@_id_get_data');
+        Route::post('/purchase/get_data','Admin\GoodsController@get_dealer_data');
     });
 
 });

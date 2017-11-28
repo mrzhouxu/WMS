@@ -13,7 +13,7 @@ class Dealer extends Model
     }
 
     /*得到经销商列表*/
-    static public function get_data($key,$val){
+    static public function get_data($key='',$val=''){
         $result = DB::table('dealer')
             ->when($key && $val , function($query)use($key,$val){
                 $query->where($key,$val);
