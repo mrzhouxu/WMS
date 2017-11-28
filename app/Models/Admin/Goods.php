@@ -78,4 +78,29 @@ class Goods extends Model
             ->get();
         return $result;
     }
+
+    /*添加商品*/
+    static public function add_goods($data){
+        $result = DB::table('commodity')
+            ->insert($data);
+        return $result;
+    }
+
+    /*更新商品信息*/
+    static public function update_goods($dealer_commodity_id,$data){
+        $result = DB::table('commodity')
+            ->where('dealer_commodity_id',$dealer_commodity_id)
+            ->where('status',0)
+            ->update($data);
+        return $result;
+    }
+
+    /*查看商品信息*/
+    static public function get_goods($dealer_commodity_id){
+        $result = DB::table('commodity')
+            ->where('dealer_commodity_id',$dealer_commodity_id)
+            ->where('status',0)
+            ->first();
+        return $result;
+    }
 }

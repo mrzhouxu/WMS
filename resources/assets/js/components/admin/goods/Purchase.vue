@@ -47,26 +47,6 @@
             </div>
         </el-card>
 
-       <!-- <el-table
-                :data="cars"
-                stripe
-                style="width: 100%">
-            <el-table-column
-                    prop="date"
-                    label="日期"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="name"
-                    label="姓名"
-                    width="180">
-            </el-table-column>
-            <el-table-column
-                    prop="address"
-                    label="地址">
-            </el-table-column>
-        </el-table>-->
-
         <div style="position: fixed;right: 20px;bottom: 0;z-index: 1;">
             <el-badge :value="carNum" :max="99" class="item">
                 <el-button type="primary" @click.native="dialogTableVisible=true"><i class="ion-ios-cart"></i> 购物车</el-button>
@@ -75,7 +55,7 @@
         </div>
 
         <el-dialog title="购物车列表" :visible.sync="dialogTableVisible"  size="large" >
-            <el-table :data="carsData" :default-sort="{prop: 'phone'}" :height="500" stripe  border >
+            <el-table :data="carsData" :default-sort="{prop: 'phone'}" :height="500" stripe  border v-loading="carLoading">
                 <el-table-column type="index" width="80"></el-table-column>
                 <el-table-column
                         prop="name"
@@ -120,7 +100,7 @@
                             <el-button
                                     size="small"
                                     type="primary"
-                                    @click="">已送达</el-button>
+                                    @click="dealer_send(scope)">已送达</el-button>
                             <el-button
                                     size="small"
                                     type="danger"
@@ -144,6 +124,7 @@
         data(){
             return {
                 loading:false,
+                carLoading:false,
                 carNum:0,
                 tableData: [/*{
                     id:'1',
@@ -220,6 +201,16 @@
                 if(local){
                     local = JSON.parse(local)
                     var carNum = JSON.parse(localStorage.getItem("carNum"))+item.num
+                    for(let i=0;i<local.length;i++){
+                        if(item.id == local[i].id){
+                            local[i].num += item.num
+                            localStorage.setItem("car", JSON.stringify(local))
+                            localStorage.setItem("carNum", JSON.stringify(carNum))
+                            this.carNum = carNum
+                            this.carsData = JSON.parse(localStorage.getItem("car"))
+                            return
+                        }
+                    }
                     local.push(item)
                     localStorage.setItem("car", JSON.stringify(local))
                     localStorage.setItem("carNum", JSON.stringify(carNum))
@@ -256,18 +247,11 @@
                 });
             },
             type_init(val){
-//                console.log(val)
-//                console.log(this.type.length)
                 for(let i=0;i<this.type.length;i++){
-//                    console.log(this.type)
-
                     if(val == this.type[i].id){
-//                        console.log(`${this.type[i].name}   ${this.type[i].id}   ${val}`)
                         return this.type[i].name
                     }
                 }
-
-//                return "饮料"
             },
             getType(){
                 axios.post('/admin/goods/type/get_data')
@@ -275,14 +259,41 @@
                         this.type = res.data.result
                     })
             },
-            remv(index){
+            remv(item){
                 var local = JSON.parse(localStorage.getItem("car"))
-//                console.log(`${local[index.$index].num}`)
-                this.carNum -= local[index.$index].num
-                local.splice(index.$index,1)
+                this.carNum -= item.row.num
+                for(let i=0;i<local.length;i++){
+                    if(local[i].id == item.row.id ){
+                        local.splice(i,1)
+                        break
+                    }
+                }
                 localStorage.setItem("car", JSON.stringify(local))
                 localStorage.setItem("carNum", this.carNum)
                 this.carsData = local
+            },
+            dealer_send(item){
+                this.carLoading = true
+                axios.post('/admin/goods/purchase/dealer_send', item.row  )
+                    .then(res=>{
+                        if( res.data.status==0 ){
+                            var local = JSON.parse(localStorage.getItem("car"))
+                            this.carNum -= item.row.num
+                            for(let i=0;i<local.length;i++){
+                                if(local[i].id == item.row.id ){
+                                    local.splice(i,1)
+                                    break
+                                }
+                            }
+                            localStorage.setItem("car", JSON.stringify(local))
+                            localStorage.setItem("carNum", this.carNum)
+                            this.carsData = local
+                        }
+                        this.carLoading = false
+                    })
+                    .catch(err=>{
+                        this.carLoading = false
+                    })
             }
         },
         mounted(){
