@@ -80,6 +80,11 @@ export default new VueRouter({
             path: '/goods/goods',
             component: resolve =>void(require(['../components/admin/goods/Goods.vue'], resolve))
         },
+        {
+            name: '订单列表',
+            path: '/order/list',
+            component: resolve =>void(require(['../components/admin/order/List.vue'], resolve))
+        },
     ]
 })
 

@@ -65,6 +65,11 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/goods/del_product','Admin\GoodsController@del_product');
     });
 
+    Route::group(['prefix'=>'order'],function(){
+        Route::post('/get_data','Admin\OrderController@get_data');
+        Route::post('/del','Admin\OrderController@del');
+    });
+
 });
 /*Route::group(['prefix' => 'weixin'], function () {
     Route::post("/config/set", 'Admin\WeixinController@set_config');
