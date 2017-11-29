@@ -75,7 +75,7 @@ class GoodsController extends Controller
     }
 
     public function dealer_send(Request $request){
-        $dealer_commodity_id = $request->id;
+        $dealer_commodity_id = isset($request->dealer_commodity_id)?$request->dealer_commodity_id:$request->id;
         $address = $request->address;
         $dealer_id = $request->dealer_id;
         $dealer_name = $request->dealer_name;
@@ -114,11 +114,91 @@ class GoodsController extends Controller
         }else{
             return json_encode(['status'=>1,'msg'=>'失败']);
         }
+    }
 
+    public function lack_data(Request $request){
+        $key = $request->key;
+        $val = $request->val;
+        $selType = $request->selType;
+        $result = Goods::get_goods_data($key,$val,$selType);
+        $dealers = Dealer::get_data();
+        foreach ($result as $g){
+            foreach($dealers as $d){
+                if($g->dealer_id == $d->id){
+                    $g->dealer_name = $d->name;
+                    $g->num = 0;
+                    $g->phone = $d->phone;
+                    $g->address = $d->address;
+                }
+            }
+        }
+        return json_encode(['status'=>0,'msg'=>'success','result'=>$result]);
+    }
 
+    public function settlement(Request $request){
+        $goods = $request->goods;
+        DB::transaction(function ()use($goods,$request) {
+            $data = [
+                'order_card'=>time().'_'.uniqid(),
+                'create_time'=>time(),
+                'price'=>$request->price,
+                'status'=>0,
+                'is_delete'=>0,
+                'profit'=>0
+            ];
+            $order_id = Goods::create_order($data);
+            $profit = 0;
+            foreach ($goods as $item){
+                $commodity = [
+                    'order_id'=>$order_id,
+                    'commodity_id'=>$item['dealer_commodity_id'],
+                    'out_price'=>$item['out_price'],
+                    'in_price'=>$item['in_price'],
+                    'profit'=>($item['out_price']-$item['in_price'])*$item['num'],
+                    'num'=>$item['num'],
+                    'unit'=>$item['unit']
+                ];
+                Goods::add_order_commodity($commodity);
+                $profit+=($item['out_price']-$item['in_price'])*$item['num'];
+            }
+            $data = [
+                'profit'=>$profit
+            ];
+            Goods::update_order($order_id,$data);
+        });
+        return json_encode(['status'=>0,'msg'=>'成功']);
+//        return json_encode(['status'=>1,'msg'=>'失败']);
+    }
 
+    public function edit_product(Request $request){
+        $product = $request->edit_product;
+        $data = [
+            'name'=>$product['name'],
+            'type'=>$product['type'],
+            'count'=>$product['count'],
+            'unit'=>$product['unit'],
+            'out_price'=>$product['out_price'],
+            'img'=>$product['img']
+        ];
+        $result = Goods::update_goods('',$data,$product['id']);
+        if($result){
+            return json_encode(['status'=>0,'msg'=>'success']);
+        }else{
+            return json_encode(['status'=>1,'msg'=>'失败']);
+        }
+    }
 
-
+    public function del_product(Request $request){
+        $product = $request->del_product;
+        $data = [
+            'status'=>1,
+        ];
+        $result = Goods::update_goods('',$data,$product['id']);
+        if($result){
+            return json_encode(['status'=>0,'msg'=>'success']);
+        }else{
+            return json_encode(['status'=>1,'msg'=>'失败']);
+        }
     }
 
 

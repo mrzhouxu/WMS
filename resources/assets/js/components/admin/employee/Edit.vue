@@ -39,7 +39,7 @@
                     <!--</template>-->
                 </el-form-item>
                 <el-form-item label="登录账号">
-                    <el-input v-model="info.user" :disabled="this.id==true"></el-input>
+                    <el-input v-model="info.user" :disabled="this.id!=null"></el-input>
                 </el-form-item>
                 <el-form-item label="联系方式">
                     <el-input v-model="info.phone"></el-input>

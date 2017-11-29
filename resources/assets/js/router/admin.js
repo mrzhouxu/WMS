@@ -70,6 +70,16 @@ export default new VueRouter({
             path: '/goods/type',
             component: resolve =>void(require(['../components/admin/goods/Type.vue'], resolve))
         },
+        {
+            name: '缺货商品',
+            path: '/goods/lack',
+            component: resolve =>void(require(['../components/admin/goods/Lack.vue'], resolve))
+        },
+        {
+            name: '商品列表',
+            path: '/goods/goods',
+            component: resolve =>void(require(['../components/admin/goods/Goods.vue'], resolve))
+        },
     ]
 })
 

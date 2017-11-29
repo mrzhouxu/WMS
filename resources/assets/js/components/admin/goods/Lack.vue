@@ -4,7 +4,7 @@
             <span class="el-breadcrumb__item__inner"><i class="ion-ios-home gm-home"></i>当前位置：</span>
             <el-breadcrumb separator="/">
                 <el-breadcrumb-item>商品管理</el-breadcrumb-item>
-                <el-breadcrumb-item>我要进货</el-breadcrumb-item>
+                <el-breadcrumb-item>缺货商品</el-breadcrumb-item>
             </el-breadcrumb>
         </div>
 
@@ -20,25 +20,26 @@
                     </el-option>
                 </el-select>
             </el-input>
-                <span style="margin: 0 0 0 10px;">商品类型：</span>
-                <el-select v-model="selType" slot="prepend" placeholder="请选择" style="width: 120px;" clearable>
-                    <el-option
-                            v-for="item in type"
-                            :key="item.id"
-                            :label="item.name"
-                            :value="item.id">
-                    </el-option>
-                </el-select>
+            <span style="margin: 0 0 0 10px;">商品类型：</span>
+            <el-select v-model="selType" slot="prepend" placeholder="请选择" style="width: 120px;" clearable>
+                <el-option
+                        v-for="item in type"
+                        :key="item.id"
+                        :label="item.name"
+                        :value="item.id">
+                </el-option>
+            </el-select>
 
             <el-button type="primary" icon="search" @click="submit">查询</el-button>
         </div>
 
-        <el-card :body-style="{ padding: '0px' }" style="display: inline-block;padding: 8px;margin: 0 6px;" v-for="item,index in tableData" :key="index">
+        <el-card :body-style="{ padding: '0px' }" style="display: inline-block;padding: 8px;margin: 0 6px;" v-for="item,index in tableData" :key="index" v-if="item.count <= 10">
             <img :src="'/show_img/'+item.img" class="image" style="width: 200px;height: 200px;">
             <div style="padding: 14px;">
                 <span>{{ item.name }}</span>
                 <p style="padding: 0;margin: 0;"><span style="margin-right: 2em;font-size: 0.8em;">进货价格:</span><span style="font-size: 1.2em;color: red;">{{ item.in_price }}</span>元/{{ item.unit }}</p>
                 <p style="padding: 0;margin: 0;"><span style="margin-right: 2em;font-size: 0.8em;">建议售价:</span><span style="font-size: 1.2em;color: red;">{{ item.out_price }}</span>元/{{ item.unit }}</p>
+                <p style="padding: 0;margin: 0;"><span style="margin-right: 2em;font-size: 0.8em;">剩余库存:</span><span style="font-size: 1.2em;color: red;">{{ item.count }}</span> {{ item.unit }}</p>
                 <p style="font-size: .8em;color: #7a7272;">{{ item.dealer_name }}</p>
                 <div class="bottom clearfix">
                     <el-input-number size="small" v-model="item.num" :min="0"></el-input-number>
@@ -54,7 +55,7 @@
             <el-button type="primary" @click.native="clean()"><i class="ion-ios-cart"></i> 清空购物车</el-button>
         </div>
 
-        <el-dialog title="购物车列表" :visible.sync="dialogTableVisible"  size="large" >
+        <el-dialog title="购物车列表" :visible.sync="dialogTableVisible"  size="large">
             <el-table :data="carsData" :default-sort="{prop: 'phone'}" :height="500" stripe  border v-loading="carLoading">
                 <el-table-column type="index" width="80"></el-table-column>
                 <el-table-column
@@ -180,7 +181,7 @@
                     val:this.val,
                     selType:this.selType
                 }
-                axios.post('/admin/goods/purchase/get_data',param)
+                axios.post('/admin/goods/lack/lack_data',param)
                     .then(res=>{
                         this.loading = false
                         this.tableData = res.data.result
@@ -197,33 +198,33 @@
                 if(item.num <= 0){
                     return
                 }
-                var local = localStorage.getItem("car");
+                var local = localStorage.getItem("carLack");
                 if(local){
                     local = JSON.parse(local)
-                    var carNum = JSON.parse(localStorage.getItem("carNum"))+item.num
+                    var carNum = JSON.parse(localStorage.getItem("carNumLack"))+item.num
                     for(let i=0;i<local.length;i++){
                         if(item.id == local[i].id){
                             local[i].num += item.num
-                            localStorage.setItem("car", JSON.stringify(local))
-                            localStorage.setItem("carNum", JSON.stringify(carNum))
+                            localStorage.setItem("carLack", JSON.stringify(local))
+                            localStorage.setItem("carNumLack", JSON.stringify(carNum))
                             this.carNum = carNum
-                            this.carsData = JSON.parse(localStorage.getItem("car"))
+                            this.carsData = JSON.parse(localStorage.getItem("carLack"))
                             return
                         }
                     }
                     local.push(item)
-                    localStorage.setItem("car", JSON.stringify(local))
-                    localStorage.setItem("carNum", JSON.stringify(carNum))
+                    localStorage.setItem("carLack", JSON.stringify(local))
+                    localStorage.setItem("carNumLack", JSON.stringify(carNum))
                     this.carNum = carNum
                 }else{
                     local = []
                     local.push(item)
                     var carNum = JSON.stringify(item.num)
-                    localStorage.setItem("car", JSON.stringify(local))
-                    localStorage.setItem("carNum",carNum )
+                    localStorage.setItem("carLack", JSON.stringify(local))
+                    localStorage.setItem("carNumLack",carNum )
                     this.carNum = carNum
                 }
-                this.carsData = JSON.parse(localStorage.getItem("car"))
+                this.carsData = JSON.parse(localStorage.getItem("carLack"))
             },
             clean(){
                 this.$confirm('此操作将清空购物车, 是否继续?', '提示', {
@@ -231,8 +232,8 @@
                     cancelButtonText: '取消',
                     type: 'warning'
                 }).then(() => {
-                    localStorage.setItem("carNum",'' )
-                    localStorage.setItem("car", '')
+                    localStorage.setItem("carNumLack",'' )
+                    localStorage.setItem("carLack", '')
                     this.carNum = ''
                     this.carsData = ''
                     this.$message({
@@ -260,7 +261,7 @@
                     })
             },
             remv(item){
-                var local = JSON.parse(localStorage.getItem("car"))
+                var local = JSON.parse(localStorage.getItem("carLack"))
                 this.carNum -= item.row.num
                 for(let i=0;i<local.length;i++){
                     if(local[i].id == item.row.id ){
@@ -268,8 +269,8 @@
                         break
                     }
                 }
-                localStorage.setItem("car", JSON.stringify(local))
-                localStorage.setItem("carNum", this.carNum)
+                localStorage.setItem("carLack", JSON.stringify(local))
+                localStorage.setItem("carNumLack", this.carNum)
                 this.carsData = local
             },
             dealer_send(item){
@@ -277,7 +278,7 @@
                 axios.post('/admin/goods/purchase/dealer_send', item.row  )
                     .then(res=>{
                         if( res.data.status==0 ){
-                            var local = JSON.parse(localStorage.getItem("car"))
+                            var local = JSON.parse(localStorage.getItem("carLack"))
                             this.carNum -= item.row.num
                             for(let i=0;i<local.length;i++){
                                 if(local[i].id == item.row.id ){
@@ -285,8 +286,8 @@
                                     break
                                 }
                             }
-                            localStorage.setItem("car", JSON.stringify(local))
-                            localStorage.setItem("carNum", this.carNum)
+                            localStorage.setItem("carLack", JSON.stringify(local))
+                            localStorage.setItem("carNumLack", this.carNum)
                             this.carsData = local
                         }
                         this.carLoading = false
@@ -294,21 +295,22 @@
                     .catch(err=>{
                         this.carLoading = false
                     })
-            }
+            },
+
         },
         mounted(){
             this.getData()
             this.getType()
-            if(localStorage.getItem("carNum")){
-                if(localStorage.getItem("carNum")>99){
+            if(localStorage.getItem("carNumLack")){
+                if(localStorage.getItem("carNumLack")>99){
                     this.carNum = "99+"
                 }else{
-                    this.carNum = localStorage.getItem("carNum")
+                    this.carNum = localStorage.getItem("carNumLack")
                 }
 
             }
-            if(localStorage.getItem("car")){
-                this.carsData = JSON.parse(localStorage.getItem("car"))
+            if(localStorage.getItem("carLack")){
+                this.carsData = JSON.parse(localStorage.getItem("carLack"))
             }
         }
     }

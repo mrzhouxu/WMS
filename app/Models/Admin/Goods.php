@@ -87,20 +87,62 @@ class Goods extends Model
     }
 
     /*更新商品信息*/
-    static public function update_goods($dealer_commodity_id,$data){
+    static public function update_goods($dealer_commodity_id='',$data,$id=''){
         $result = DB::table('commodity')
-            ->where('dealer_commodity_id',$dealer_commodity_id)
+            ->when($dealer_commodity_id,function($query)use($dealer_commodity_id){
+                $query->where('dealer_commodity_id',$dealer_commodity_id);
+            })
+            ->when($id,function($query)use($id){
+                $query->where('id',$id);
+            })
             ->where('status',0)
             ->update($data);
         return $result;
     }
 
     /*查看商品信息*/
-    static public function get_goods($dealer_commodity_id){
+    static public function get_goods($dealer_commodity_id=""){
         $result = DB::table('commodity')
-            ->where('dealer_commodity_id',$dealer_commodity_id)
+            ->when($dealer_commodity_id,function($query)use($dealer_commodity_id){
+                $query->where('dealer_commodity_id',$dealer_commodity_id);
+            })
             ->where('status',0)
             ->first();
         return $result;
     }
+
+    /*查看所有商品信息*/
+    static public function get_goods_data($key='',$val='',$selType=''){
+        $result = DB::table('commodity')
+            ->when($key&&$val,function($query)use($key,$val){
+                $query->where($key,'like','%'.$val.'%');
+            })
+            ->when($selType,function($query)use($selType){
+                $query->where('type',$selType);
+            })
+            ->where('status',0)
+            ->get();
+        return $result;
+    }
+
+    /*生成订单*/
+    static public function create_order($data){
+        $result = DB::table('order')
+            ->insertGetId($data);
+        return $result;
+    }
+    /*更新订单*/
+    static public function update_order($id,$data){
+        $result = DB::table('order')
+            ->where('id',$id)
+            ->update($data);
+        return $result;
+    }
+    /*添加订单商品*/
+    static public function add_order_commodity($data){
+        $result = DB::table('order_commodity')
+            ->insert($data);
+        return $result;
+    }
+
 }

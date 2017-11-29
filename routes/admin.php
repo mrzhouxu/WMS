@@ -59,6 +59,10 @@ Route::group(['prefix' => 'admin'], function () {
         Route::post('/type/_id_get_data','Admin\GoodsController@_id_get_data');
         Route::post('/purchase/get_data','Admin\GoodsController@get_dealer_data');
         Route::post('/purchase/dealer_send','Admin\GoodsController@dealer_send');
+        Route::post('/lack/lack_data','Admin\GoodsController@lack_data');
+        Route::post('/goods/settlement','Admin\GoodsController@settlement');
+        Route::post('/goods/edit_product','Admin\GoodsController@edit_product');
+        Route::post('/goods/del_product','Admin\GoodsController@del_product');
     });
 
 });
