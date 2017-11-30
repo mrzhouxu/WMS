@@ -406,7 +406,8 @@
                                 localStorage.setItem("carNumGoods",'' )
                                 localStorage.setItem("carGoods", '')
                                 this.carNum = ''
-                                this.carsData = ''
+                                this.dialogTableVisible = false
+                                this.getData()
                             }else if(res.data.status == 1){
                                 this.carLoading = false
                                 this.$message({

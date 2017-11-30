@@ -159,6 +159,10 @@ class GoodsController extends Controller
                     'unit'=>$item['unit']
                 ];
                 Goods::add_order_commodity($commodity);
+                $data=[
+                    'count'=>($item['count']-$item['num'])
+                ];
+                Goods::update_goods('',$data,$item['id']);
                 $profit+=($item['out_price']-$item['in_price'])*$item['num'];
             }
             $data = [
